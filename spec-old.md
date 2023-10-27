@@ -1,26 +1,28 @@
-# MessagePack format specification
+# MessagePack 格式规范
 
-**This spec is updated. See [spec.md](spec.md) for the updated version.**
+> [acbcdf6b2a5a62666987c041124a10c69124be0d](https://github.com/msgpack/msgpack/commit/acbcdf6b2a5a62666987c041124a10c69124be0d)
+
+**该规范已经更新过。查看更新过的版本 [spec.md](spec.md) **
 
 
-MessagePack saves type-information to the serialized data. Thus each data is stored in **type-data** or **type-length-data** style.
-MessagePack supports following types:
+MessagePack 在序列化的数据中保存了类型信息。因此，每一种数据都会存储成 **type-data** 或 **type-length-data** 的风格。
+MessagePack 支持如下类型：
 
-* Fixed length types
-  * Integers
+* 定长类型
+  * 整数
   * nil
-  * boolean
-  * Floating point
-* Variable length types
-  * Raw bytes
-* Container types
-  * Arrays
-  * Maps
+  * 布尔
+  * 浮点数
+* 变长类型
+  * 原始字节
+* 容器类型
+  * 数组
+  * Map
 
-Each type has one or more serialize format:
+每一种类型都有一种或多种序列化的格式：
 
-* Fixed length types
-  * Integers
+* 定长类型
+  * 整数
       * positive fixnum
       * negative fixnum
       * uint 8
@@ -33,36 +35,36 @@ Each type has one or more serialize format:
       * int 64
   * Nil
       * nil
-  * Boolean
+  * 布尔
       * true
       * false
-  * Floating point
+  * 浮点数
       * float
       * double
-* Variable length types
-  * Raw bytes
+* 变长类型
+  * 原始字节
       * fix raw
       * raw 16
       * raw 32
-* Container types
-  * Arrays
+* 容器类型
+  * 数组
       * fix array
       * array 16
       * array 32
-  * Maps
+  * Map
       * fix map
       * map 16
       * map 32
 
-To serialize strings, use UTF-8 encoding and Raw type.
+字符串是用 UTF-8 编码和 Raw 类型序列化的。
 
-See this thread to understand the reason why msgpack doesn't have string type:&nbsp;[https://github.com/msgpack/msgpack/issues/121]
+看下 [msgpack/msgpack#121]](https://github.com/msgpack/msgpack/issues/121) 这个 issue 以理解为什么 msgpack 并没有字符串类型
 
-## Integers
+## 整数
 
 ### positive fixnum
 
-save an integer within the range [0, 127] in 1 bytes.
+在一个字节中存储一个 [0, 127] 范围内的整数
 
     +--------+
     |0XXXXXXX|
@@ -72,7 +74,7 @@ save an integer within the range [0, 127] in 1 bytes.
 
 ### negative fixnum
 
-save an integer within the range [-32, -1] in 1 bytes.
+在一个字节中存储一个 [-32, -1] 范围内的整数
 
     +--------+
     |111XXXXX|
@@ -82,7 +84,7 @@ save an integer within the range [-32, -1] in 1 bytes.
 
 ### uint 8
 
-save an unsigned 8-bit integer in 2 bytes.
+在 2 个字节中存储一个无符号的 8-bit 整数
 
     +--------+--------+
     |  0xcc  |XXXXXXXX|
@@ -92,7 +94,7 @@ save an unsigned 8-bit integer in 2 bytes.
 
 ### uint 16
 
-save an unsigned 16-bit big-endian integer in 3 bytes.
+在 3 个字节中存储一个无符号的 16-bit 大端存储的整数
 
     +--------+--------+--------+
     |  0xcd  |XXXXXXXX|XXXXXXXX|
@@ -102,7 +104,7 @@ save an unsigned 16-bit big-endian integer in 3 bytes.
 
 ### uint 32
 
-save an unsigned 32-bit big-endian integer in 5 bytes.
+在 5 个字节中存储一个无符号的 32-bit 大端存储的整数
 
     +--------+--------+--------+--------+--------+
     |  0xce  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|
@@ -112,7 +114,7 @@ save an unsigned 32-bit big-endian integer in 5 bytes.
 
 ### uint 64
 
-save an unsigned 64-bit big-endian integer in 9 bytes.
+在 9 个字节中存储一个无符号的 64-bit 大端存储的整数
 
     +--------+--------+--------+--------+--------+--------+--------+--------+--------+
     |  0xcf  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|
@@ -122,7 +124,7 @@ save an unsigned 64-bit big-endian integer in 9 bytes.
 
 ### int 8
 
-save a signed 8-bit integer in 2 bytes.
+在 2 个字节中存储一个有符号的 8-bit 整数
 
     +--------+--------+
     |  0xd0  |XXXXXXXX|
@@ -131,7 +133,7 @@ save a signed 8-bit integer in 2 bytes.
 
 ### int 16
 
-save a signed 16-bit big-endian integer in 3 bytes.
+在 3 个字节中存储一个有符号的 16-bit 大端存储的整数
 
     +--------+--------+--------+
     |  0xd1  |XXXXXXXX|XXXXXXXX|
@@ -141,7 +143,7 @@ save a signed 16-bit big-endian integer in 3 bytes.
 
 ### int 32
 
-save a signed 32-bit big-endian integer in 5 bytes.
+在 5 个字节中存储一个有符号的 32-bit 大端存储的整数
 
     +--------+--------+--------+--------+--------+
     |  0xd2  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|
@@ -150,7 +152,7 @@ save a signed 32-bit big-endian integer in 5 bytes.
 
 ### int 64
 
-save a signed 64-bit big-endian integer in 9 bytes.
+在 9 个字节中存储一个有符号的 64-bit 大端存储的整数
 
     +--------+--------+--------+--------+--------+--------+--------+--------+--------+
     |  0xd3  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|
@@ -163,7 +165,7 @@ save a signed 64-bit big-endian integer in 9 bytes.
 
 ### nil
 
-save a nil.
+存储一个 nil 。
 
     +--------+
     |  0xc0  |
@@ -175,7 +177,7 @@ save a nil.
 
 ### true
 
-save a true.
+存储 true。
 
     +--------+
     |  0xc3  |
@@ -184,19 +186,19 @@ save a true.
 
 ### false
 
-save a false.
+存储 false。
 
     +--------+
     |  0xc2  |
     +--------+
 
 
-## Floating point
+## 浮点数
 
 
 ### float
 
-save a big-endian IEEE 754 single precision floating point number in 5 bytes.
+在 5 个字节中存储一个大端格式的 IEEE 754 单精度浮点数。
 
     +--------+--------+--------+--------+--------+
     |  0xca  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|
@@ -206,7 +208,7 @@ save a big-endian IEEE 754 single precision floating point number in 5 bytes.
 
 ### double
 
-save a big-endian IEEE 754 double precision floating point number in 9 bytes.
+在 9 个字节中存储一个大端格式的 IEEE 754 双精度浮点数。
 
     +--------+--------+--------+--------+--------+--------+--------+--------+--------+
     |  0xcb  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|
@@ -214,12 +216,12 @@ save a big-endian IEEE 754 double precision floating point number in 9 bytes.
     => big-endian IEEE 754 single precision floating point number XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX
 
 
-## Raw bytes
+## 原始字节
 
 
 ### fix raw
 
-save raw bytes up to 31 bytes.
+存储一个原始字节，最多 31 字节。
 
     +--------+--------
     |101XXXXX|...N bytes
@@ -229,7 +231,7 @@ save raw bytes up to 31 bytes.
 
 ### raw 16
 
-save raw bytes up to (2^16)-1 bytes. Length is stored in unsigned 16-bit big-endian integer.
+存储一个原始字节，最多 (2^16)-1 字节。长度存储在一个 16-bit 大端格式的无符号整数中。
 
     +--------+--------+--------+--------
     |  0xda  |XXXXXXXX|XXXXXXXX|...N bytes
@@ -239,7 +241,7 @@ save raw bytes up to (2^16)-1 bytes. Length is stored in unsigned 16-bit big-end
 
 ### raw 32
 
-save raw bytes up to (2^32)-1 bytes. Length is stored in unsigned 32-bit big-endian integer.
+存储原始字节，最多 (2^31)-1 字节。长度存储在一个 32-bit 大端格式的无符号整数中。
 
     +--------+--------+--------+--------+--------+--------
     |  0xdb  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|...N bytes
@@ -248,12 +250,12 @@ save raw bytes up to (2^32)-1 bytes. Length is stored in unsigned 32-bit big-end
 
 
 
-## Arrays
+## 数组
 
 
 ### fix array
 
-save an array up to 15 elements.
+存储一个数组，最多 15 个元素。
 
     +--------+--------
     |1001XXXX|...N objects
@@ -263,7 +265,7 @@ save an array up to 15 elements.
 
 ### array 16
 
-save an array up to (2^16)-1 elements. Number of elements is stored in unsigned 16-bit big-endian integer.
+存储一个数组，最多 (2^16-1) 个元素。元素个数存储在一个 16-bit 大端格式的无符号整数中。
 
     +--------+--------+--------+--------
     |  0xdc  |XXXXXXXX|XXXXXXXX|...N objects
@@ -273,7 +275,7 @@ save an array up to (2^16)-1 elements. Number of elements is stored in unsigned 
 
 ### array 32
 
-save an array up to (2^32)-1 elements. Number of elements is stored in unsigned 32-bit big-endian integer.
+存储一个数组，最多 (2^32-1) 个元素。元素个数存储在一个 32-bit 大端格式的无符号整数中。
 
     +--------+--------+--------+--------+--------+--------
     |  0xdd  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|...N objects
@@ -281,44 +283,44 @@ save an array up to (2^32)-1 elements. Number of elements is stored in unsigned 
     => XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX (=N) elements array.
 
 
-## Maps
+## Map
 
 
 ### fix map
 
-save a map up to 15 elements.
+存储一个 map，最多 15 个元素。
 
     +--------+--------
     |1000XXXX|...N*2 objects
     +--------+--------
     => 0000XXXX (=N) elements map
-       where odd elements are key and next element of the key is its associate value.
+       其中奇数元素是 key，紧接着下一个元素是 该 key 的 值。
 
 
 ### map 16
 
-save a map up to (2^16)-1 elements. Number of elements is stored in unsigned 16-bit big-endian integer.
+存储一个 map，最多 (2^16)-1 个元素。元素个数存在一个 16-bit 大端格式的无符号整数中
 
     +--------+--------+--------+--------
     |  0xde  |XXXXXXXX|XXXXXXXX|...N*2 objects
     +--------+--------+--------+--------
     => XXXXXXXX_XXXXXXXX (=N) elements map
-       where odd elements are key and next element of the key is its associate value.
+       其中奇数元素是 key，紧接着下一个元素是 该 key 的 值。
 
 
 ### map 32
 
-save a map up to (2^32)-1 elements. Number of elements is stored in unsigned 32-bit big-endian integer.
+存储一个 map，最多 (2^32)-1 个元素。元素个数存在一个 32-bit 大端格式的无符号整数中
 
     +--------+--------+--------+--------+--------+--------
     |  0xdf  |XXXXXXXX|XXXXXXXX|XXXXXXXX|XXXXXXXX|...N*2 objects
     +--------+--------+--------+--------+--------+--------
     => XXXXXXXX_XXXXXXXX_XXXXXXXX_XXXXXXXX (=N) elements map
-       where odd elements are key and next element of the key is its associate value.
+       其中奇数元素是 key，紧接着下一个元素是 该 key 的 值。
 
 
 
-## Type Chart
+## 类型图表
 
 <table>
 <tr><th>Type</th><th>Binary</th><th>Hex</th></tr>
